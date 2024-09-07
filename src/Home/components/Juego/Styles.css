@@ -1,0 +1,27 @@
+.contenedorJuego {
+    padding: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .fondo-verde {
+    background-color: green;
+    color: white;
+  }
+  
+  .fondo-rojo {
+    background-color: red;
+    color: white;
+  }
+  
+  .mensaje-perdida {
+    color: darkred;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  .mensaje-victoria {
+    color: black;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
