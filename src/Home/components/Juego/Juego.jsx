@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import sonidoTemplo from '../sounds/sonidoTemplo.mp3';
+import clickArena from '../sounds/clickArena.mp3';
 import './Styles.css';
 
 const Juego = () => {
-
   const [numero, setNumero] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [intentos, setIntentos] = useState(0);
@@ -16,14 +17,26 @@ const Juego = () => {
   const [mensajeClase, setMensajeClase] = useState("");
   const [fondoClase, setFondoClase] = useState("");
 
+  const audioRef = useRef(null);
+  const clickAudioRef = useRef(null);
+
+  const playAudio = (audioRef) => {
+    if (audioRef.current) {
+      audioRef.current.play().catch(error => {
+        console.error('Error al reproducir el audio:', error);
+      });
+    }
+  };
+
   const manejarCambio = (e) => {
     setNumero(e.target.value);
   };
 
   const manejarEnvio = () => {
+    playAudio(clickAudioRef); 
     const num = parseInt(numero, 10);
     if (puntaje <= 0) {
-      setMensaje('¡Perdiste! El número secreto era ${numeroSecreto}.');
+      setMensaje(`¡Perdiste! El número secreto era ${numeroSecreto}.`);
       setMensajeClase('mensaje-perdida');
       setFondoClase('fondo-rojo');
       return;
@@ -64,6 +77,7 @@ const Juego = () => {
   };
 
   const reiniciarJuego = useCallback(() => {
+    playAudio(clickAudioRef); 
     setNumero("");
     setMensaje("");
     setIntentos(0);
@@ -74,6 +88,16 @@ const Juego = () => {
   }, []);
 
   useEffect(() => {
+    const handleAudioLoad = () => {
+      playAudio(audioRef);
+    };
+
+    if (audioRef.current) {
+      handleAudioLoad();
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('highScores', JSON.stringify(highScores));
   }, [highScores]);
 
@@ -81,41 +105,46 @@ const Juego = () => {
 
   return (
     <div className={`contenedorJuego ${fondoClase}`}>
-      <h1 id='titulo'>Adivina el numero.Si puedes...</h1>
+      <h1 id='titulo'>Adivina el numero. Si puedes...</h1>
 
       <div className='inputIntentosContainer'>
-      <input value={numero} onChange={manejarCambio} />
-      <p className={mensajeClase}>{mensaje}</p>
-      <p> Intentos : {intentos} / 5</p>
+        <input value={numero} onChange={manejarCambio} />
+        <p className={mensajeClase}>{mensaje}</p>
+        <p> Intentos: {intentos} / 5</p>
       </div>
 
-      
       <div className='contenedorBotones'>
         <button onClick={manejarEnvio} disabled={puntaje <= 0}>Adivinar</button>
         <button onClick={reiniciarJuego}>Reiniciar</button>
       </div>
-    
-      {mostrarHighScores && (
-    <div className="podioContainer">
-      <p id="podio">Puntaje mas alto</p>
-      <ul>
-        {highScores
-          .sort((a, b) => a.intentos - b.intentos)
-          .slice(0, 1)
-          .map((score, index) => (
-            <li key={index}>
-              #{index + 1} Puntaje: {score.puntaje}
-            </li>
-          ))}
-      </ul>
-    </div>
-)}
 
+      {mostrarHighScores && (
+        <div className="podioContainer">
+          <p id="podio">Puntaje más alto</p>
+          <ul>
+            {highScores
+              .sort((a, b) => a.intentos - b.intentos)
+              .slice(0, 1)
+              .map((score, index) => (
+                <li key={index}>
+                  #{index + 1} Puntaje: {score.puntaje}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+
+      <audio ref={audioRef} src={sonidoTemplo} preload="auto" />
+      <audio ref={clickAudioRef} src={clickArena} preload="auto" />
     </div>
   );
 };
 
 export default Juego;
+
+
+
+
 
 
 
