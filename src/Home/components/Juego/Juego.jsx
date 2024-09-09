@@ -97,11 +97,11 @@ const Juego = () => {
     
       {mostrarHighScores && (
     <div className="podioContainer">
-      <p id="podio">Podio de High Scores</p>
+      <p id="podio">Puntaje mas alto</p>
       <ul>
         {highScores
           .sort((a, b) => a.intentos - b.intentos)
-          .slice(0, 3)
+          .slice(0, 1)
           .map((score, index) => (
             <li key={index}>
               #{index + 1} Puntaje: {score.puntaje}
