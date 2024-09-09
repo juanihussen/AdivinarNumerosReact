@@ -2,11 +2,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import './Styles.css';
 
 const Juego = () => {
+
   const [numero, setNumero] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [intentos, setIntentos] = useState(0);
   const [puntaje, setPuntaje] = useState(5);
   const [numeroSecreto, setNumeroSecreto] = useState(Math.floor(Math.random() * 10) + 1);
+
   const [highScores, setHighScores] = useState(() => {
     const savedScores = localStorage.getItem('highScores');
     return savedScores ? JSON.parse(savedScores) : [];
@@ -21,23 +23,26 @@ const Juego = () => {
   const manejarEnvio = () => {
     const num = parseInt(numero, 10);
     if (puntaje <= 0) {
-      setMensaje(`¡Perdiste! El número secreto era ${numeroSecreto}.`);
+      setMensaje('¡Perdiste! El número secreto era ${numeroSecreto}.');
       setMensajeClase('mensaje-perdida');
       setFondoClase('fondo-rojo');
       return;
     }
 
     setIntentos(intentos + 1);
+
     if (num === numeroSecreto) {
       setMensaje(`¡Felicidades! Adivinaste el número. Puntaje final: ${puntaje}`);
       setMensajeClase('mensaje-victoria');
       setFondoClase('fondo-verde');
+
       const nuevoHighScore = { intentos, puntaje };
       setHighScores(prevScores => {
         const nuevosScores = [...prevScores, nuevoHighScore]
           .sort((a, b) => a.intentos - b.intentos)
           .slice(0, 5);
         localStorage.setItem('highScores', JSON.stringify(nuevosScores));
+
         return nuevosScores;
       });
     } else {
@@ -76,26 +81,36 @@ const Juego = () => {
 
   return (
     <div className={`contenedorJuego ${fondoClase}`}>
-      <input type="number" value={numero} onChange={manejarCambio} />
-      <button onClick={manejarEnvio} disabled={puntaje <= 0}>Adivinar</button>
-      <button onClick={reiniciarJuego}>Reiniciar Juego</button>
+      <h1 id='titulo'>Adivina el numero.Si puedes...</h1>
+
+      <div className='inputIntentosContainer'>
+      <input value={numero} onChange={manejarCambio} />
       <p className={mensajeClase}>{mensaje}</p>
-      <p>Intentos: {intentos}</p>
+      <p> Intentos : {intentos} / 5</p>
+      </div>
+
+      
+      <div className='contenedorBotones'>
+        <button onClick={manejarEnvio} disabled={puntaje <= 0}>Adivinar</button>
+        <button onClick={reiniciarJuego}>Reiniciar</button>
+      </div>
+    
       {mostrarHighScores && (
-        <>
-          <h2>Podio de High Scores</h2>
-          <il>
-            {highScores
-              .sort((a, b) => a.intentos - b.intentos)
-              .slice(0, 5)
-              .map((score, index) => (
-                <li key={index}>
-                  #{index + 1} - Puntaje: {score.puntaje}
-                </li>
-              ))}
-          </il>
-        </>
-      )}
+    <div className="podioContainer">
+      <p id="podio">Podio de High Scores</p>
+      <ul>
+        {highScores
+          .sort((a, b) => a.intentos - b.intentos)
+          .slice(0, 3)
+          .map((score, index) => (
+            <li key={index}>
+              #{index + 1} Puntaje: {score.puntaje}
+            </li>
+          ))}
+      </ul>
+    </div>
+)}
+
     </div>
   );
 };
