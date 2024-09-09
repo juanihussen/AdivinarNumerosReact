@@ -91,9 +91,8 @@
     padding: 1rem 1rem;
     color: white;
     font-size: 1rem;
-    background-image: url('https://i.pinimg.com/564x/be/79/b3/be79b35643477a50ebf095242330b78a.jpg'); /* Ruta a la imagen de textura */
-    background-size: cover; /* Asegura que la textura cubra el botón */
-    border: 1px solid #ddd; /* Borde sutil para destacar el botón */
+    background-image: url('https://i.pinimg.com/564x/be/79/b3/be79b35643477a50ebf095242330b78a.jpg');
+    border: 1px solid #ddd; 
   }
 
   button:hover{
