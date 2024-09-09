@@ -22,15 +22,13 @@ const Juego = () => {
 
   const playAudio = (audioRef) => {
     if (audioRef.current) {
-      audioRef.current.play().catch(error => {
-        console.error('Error al reproducir el audio:', error);
-      });
+      audioRef.current.play();
     }
   };
 
   const manejarCambio = (e) => {
     setNumero(e.target.value);
-  };
+  }; 
 
   const manejarEnvio = () => {
     playAudio(clickAudioRef); 
@@ -98,6 +96,7 @@ const Juego = () => {
   }, []);
 
   useEffect(() => {
+    playAudio(sonidoTemplo);
     localStorage.setItem('highScores', JSON.stringify(highScores));
   }, [highScores]);
 
